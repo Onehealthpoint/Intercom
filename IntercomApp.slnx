@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="Intercom.Application/Intercom.Application.csproj" />
+  <Project Path="Intercom.Domain/Intercom.Domain.csproj" />
+  <Project Path="Intercom.Infrastructure.Android/Intercom.Infrastructure.Android.csproj" />
+  <Project Path="Intercom.Infrastructure/Intercom.Infrastructure.csproj" />
+  <Project Path="Intercom.Tests/Intercom.Tests.csproj" />
+  <Project Path="Intercom.UI/Intercom.UI.csproj" />
+</Solution>
+

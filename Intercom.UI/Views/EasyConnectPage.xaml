@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Intercom.UI.ViewModels"
+             xmlns:models="clr-namespace:Intercom.Domain.Models;assembly=Intercom.Domain"
+             x:Class="Intercom.UI.Views.EasyConnectPage"
+             x:DataType="vm:IntercomViewModel">
+    <ScrollView>
+        <VerticalStackLayout Padding="20,24,20,28" Spacing="20" MaximumWidthRequest="600">
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Rider Intercom" Style="{StaticResource ScreenTitle}" SemanticProperties.HeadingLevel="Level1" />
+                <Label Text="Connect over shared Wi-Fi or a phone hotspot." Style="{StaticResource SecondaryText}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Panel}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Rider nickname" Style="{StaticResource SectionTitle}" />
+                    <Entry Text="{Binding Nickname}" Placeholder="Your nickname"
+                           SemanticProperties.Description="Rider nickname" MaxLength="24" ReturnType="Done" />
+                    <Button Text="Host group" Style="{StaticResource AccentButton}" Command="{Binding HostCommand}"
+                            IsEnabled="{Binding CanUseControls}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border IsVisible="{Binding HasError}" Style="{StaticResource ErrorPanel}">
+                <Label Text="{Binding Error}" TextColor="{StaticResource ErrorText}" />
+            </Border>
+
+            <VerticalStackLayout Spacing="12">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <Label Text="Nearby groups" Style="{StaticResource SectionTitle}" VerticalOptions="Center"
+                           SemanticProperties.HeadingLevel="Level2" />
+                    <Button Grid.Column="1" Text="{Binding ScanButtonText}" Command="{Binding ScanCommand}"
+                            IsEnabled="{Binding CanUseControls}" />
+                </Grid>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                                       HeightRequest="20" WidthRequest="20" Color="{StaticResource Accent}" />
+                    <Label Grid.Column="1" Text="{Binding LobbyStatus}" Style="{StaticResource SecondaryText}" VerticalOptions="Center" />
+                </Grid>
+                <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Groups}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:PeerGroup">
+                            <Border Style="{StaticResource Panel}">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                    <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding HostNickname}" Style="{StaticResource SectionTitle}" />
+                                        <Label Text="{Binding IpAddress}" Style="{StaticResource SecondaryText}" />
+                                    </VerticalStackLayout>
+                                    <Button Grid.Column="1" Text="Join" CommandParameter="{Binding .}"
+                                            Command="{Binding JoinCommand, Source={RelativeSource AncestorType={x:Type vm:IntercomViewModel}}, x:DataType=vm:IntercomViewModel}"
+                                            IsEnabled="{Binding CanUseControls, Source={RelativeSource AncestorType={x:Type vm:IntercomViewModel}}, x:DataType=vm:IntercomViewModel}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="10">
+                <Button Text="Join by address" Command="{Binding ToggleAddressFormCommand}" IsEnabled="{Binding CanUseControls}" />
+                <Border IsVisible="{Binding ShowAddressForm}" Style="{StaticResource Panel}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Host Wi-Fi address" Style="{StaticResource SectionTitle}" />
+                        <Entry Text="{Binding HostAddress}" Placeholder="192.168.1.10"
+                               SemanticProperties.Description="Host Wi-Fi address"
+                               IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" MaxLength="15" />
+                        <Button Text="Connect" Style="{StaticResource AccentButton}" Command="{Binding JoinAddressCommand}"
+                                IsEnabled="{Binding CanUseControls}" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>
+

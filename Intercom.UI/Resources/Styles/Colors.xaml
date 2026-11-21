@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <Color x:Key="Canvas">#0C1416</Color>
+    <Color x:Key="Surface">#142123</Color>
+    <Color x:Key="Raised">#203235</Color>
+    <Color x:Key="Line">#354B4E</Color>
+    <Color x:Key="Ink">#F2F8F6</Color>
+    <Color x:Key="SecondaryInk">#ADC5C2</Color>
+    <Color x:Key="Accent">#76E8BC</Color>
+    <Color x:Key="AccentInk">#0B2920</Color>
+    <Color x:Key="Live">#FFCD81</Color>
+    <Color x:Key="ErrorSurface">#392423</Color>
+    <Color x:Key="ErrorText">#FFB7AF</Color>
+    <SolidColorBrush x:Key="LineBrush" Color="{StaticResource Line}" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorText}" />
+</ResourceDictionary>
+

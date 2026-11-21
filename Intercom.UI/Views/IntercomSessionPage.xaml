@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Intercom.UI.ViewModels"
+             xmlns:models="clr-namespace:Intercom.Domain.Models;assembly=Intercom.Domain"
+             x:Class="Intercom.UI.Views.IntercomSessionPage"
+             x:DataType="vm:IntercomViewModel">
+    <Grid RowDefinitions="*,Auto" MaximumWidthRequest="600">
+        <ScrollView>
+            <VerticalStackLayout Padding="20,24,20,16" Spacing="16">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="{Binding SessionStatus}" TextColor="{StaticResource Accent}"
+                           FontFamily="OpenSansSemibold" FontSize="14" />
+                    <Label Text="{Binding RoomTitle}" Style="{StaticResource ScreenTitle}" SemanticProperties.HeadingLevel="Level1" />
+                    <Label Text="{Binding RoomAddress, StringFormat='Host address · {0}'}" Style="{StaticResource SecondaryText}" />
+                </VerticalStackLayout>
+
+                <Border IsVisible="{Binding HasError}" Style="{StaticResource ErrorPanel}">
+                    <Label Text="{Binding Error}" TextColor="{StaticResource ErrorText}" />
+                </Border>
+                <Label Text="Allow notifications in Android settings to show End session when the app is hidden."
+                       Style="{StaticResource SecondaryText}" IsVisible="{Binding ShowNotificationHint}" />
+
+                <Border Style="{StaticResource Panel}">
+                    <VerticalStackLayout Spacing="11">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Label Text="Riders" Style="{StaticResource SectionTitle}" SemanticProperties.HeadingLevel="Level2" />
+                            <Label Grid.Column="1" Text="{Binding RiderCount}" Style="{StaticResource SecondaryText}" />
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="{StaticResource Line}" />
+                        <VerticalStackLayout Spacing="9" BindableLayout.ItemsSource="{Binding Riders}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:Rider">
+                                    <Label Text="{Binding Nickname}" />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button Text="Audio settings" Command="{Binding ToggleAudioSettingsCommand}" />
+                <Border Style="{StaticResource Panel}" IsVisible="{Binding ShowAudioSettings}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="{Binding GainLabel}" />
+                        <Slider Minimum="0" Maximum="3" Value="{Binding InputGain, Mode=TwoWay}"
+                                SemanticProperties.Description="Microphone gain" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                            <Label Text="Reduce background noise" VerticalOptions="Center" />
+                            <Switch Grid.Column="1" IsToggled="{Binding ReduceNoise, Mode=TwoWay}"
+                                    SemanticProperties.Description="Reduce background noise" />
+                        </Grid>
+                        <Label Text="{Binding NoiseLabel}" />
+                        <Slider Minimum="0" Maximum="30" Value="{Binding NoiseReduction, Mode=TwoWay}"
+                                IsEnabled="{Binding ReduceNoise}" SemanticProperties.Description="Noise reduction level" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Row="1" BackgroundColor="{StaticResource Surface}" Stroke="{StaticResource LineBrush}"
+                StrokeThickness="1" Padding="20,10,20,14">
+            <VerticalStackLayout Spacing="8">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <VerticalStackLayout VerticalOptions="Center" Spacing="2">
+                        <Label Text="Hands-free" Style="{StaticResource SectionTitle}" />
+                        <Label Text="{Binding MicrophoneStatus}" Style="{StaticResource SecondaryText}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsTransmitting}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource Live}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="1" IsToggled="{Binding HandsFree, Mode=OneWay}" IsEnabled="{Binding CanUseControls}"
+                            Toggled="OnHandsFreeToggled" SemanticProperties.Description="Hands-free"
+                            SemanticProperties.Hint="Keeps the microphone on when the screen locks" />
+                </Grid>
+
+                <Button Text="{Binding TalkButtonText}" Style="{StaticResource AccentButton}" FontSize="20"
+                        MinimumHeightRequest="68" IsVisible="{Binding ShowTalkButton}" IsEnabled="{Binding CanTalk}"
+                        HandlerChanged="OnTalkHandlerChanged"
+                        HandlerChanging="OnTalkHandlerChanging">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsTransmitting}" Value="True">
+                            <Setter Property="BackgroundColor" Value="{StaticResource Live}" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Button Text="{Binding MuteButtonText}" Command="{Binding ToggleMuteCommand}" IsEnabled="{Binding CanUseControls}" />
+                    <Button Grid.Column="1" Text="Leave" TextColor="{StaticResource ErrorText}"
+                            Command="{Binding LeaveCommand}" IsEnabled="{Binding CanUseControls}" />
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentView>
+
